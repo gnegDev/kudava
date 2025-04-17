@@ -1,0 +1,130 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+    margin: 0px;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 32px 32px;
+}
+
+h1 {
+    line-height: 0px;
+}
+
+header {
+    display: grid;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+
+    margin: 0px 64px 16px;
+    padding: 8px;
+
+    backdrop-filter: blur(4px);
+
+    border: solid 2px;
+    border-top: 0px;
+    border-radius: 0px 0px 16px 16px;
+    box-shadow: 0px 4px 2px rgb(0, 0, 0, 0.2);
+}
+
+main {
+    flex: 1;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 0px 64px 16px;
+    padding: 8px;
+
+    border: solid 2px;
+    border-radius: 16px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0px 4px 2px rgb(0, 0, 0, 0.2);
+}
+
+#charts {
+    display: flex;
+    border: solid 1px;
+    border-radius: 8px;
+}
+
+
+.content {
+    flex: 1;
+}
+
+.hbox {
+    display: grid;
+    gap: 8px;
+}
+
+.vbox {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 8px;
+}
+
+.input-form .vbox button {
+    background-color: #FFB22C;
+}
+
+.input-form .vbox button:hover {
+    background-color: #E5A027;
+}
+
+.input-form .vbox button:active {
+    background-color: #CC8E23;
+}
+
+.input-form .vbox input {
+    width: auto;
+    border: solid 1px;
+    border-radius: 8px;
+}
+
+button {
+    padding: 10px 20px;
+
+    border: solid 1px;
+    border-radius: 8px;
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+.table-container {
+    overflow: auto;
+    border: solid 1px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    border: solid 1px;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+th {
+    border-top: none;
+    border-bottom: none;
+
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}

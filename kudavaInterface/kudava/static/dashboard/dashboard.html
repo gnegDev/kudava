@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dashboard/style.css') }}">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <title>Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Dashboard</h1>
+        <div class="vbox">
+            <button><b>Dashboard</b></button>
+            <button>Account</button>
+            <button>Settings</button>
+            <button>Info</button>
+        </div>
+    </header>
+    <main>
+        <div class="content">
+            <div class="hbox">
+
+                <div class="input-form">
+                    <div class="vbox">
+                        <input id="from-date" type="datetime-local" step="1">
+                        <input id="to-date" type="datetime-local" step="1">
+                        <button onclick="fetchData()">Load Packet Data</button>
+                    </div>
+                </div>
+
+                <div class="vbox" id="charts" style="overflow-y:hidden;">
+                    <div id="packets-by-time"></div>
+                    <div id="from-chart"></div>
+                    <div id="to-chart"></div>
+                </div>
+
+                <div class="table-container">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th style="border-left: none;">UUID</th>
+                                <th>Protocol</th>
+                                <th>Arrival Time</th>
+                                <th>Source IP</th>
+                                <th>Destination IP</th>
+                                <th style="border-right: none;">Additional Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+        <code style="margin-top: 8px;">v1.0.0</code>
+    </main>
+
+    <script>
+        // async function fetchData() {
+        //     try {
+        //         const response = await fetch('http://localhost:8080/api/packet/output/get');
+
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! status: ${response.status}`);
+        //         }
+
+        //         const data = await response.json();
+        //         populateTable(data);
+        //     } catch (error) {
+        //         console.error('Error fetching data:', error);
+        //     }
+        //     google.charts.setOnLoadCallback(drawChart);
+        // }
+
+        // function populateTable(packets) {
+        //     const tableBody = document.getElementById('tableBody');
+        //     tableBody.innerHTML = ''; // Очищаем предыдущие данные
+
+        //     packets.forEach(packet => {
+        //         const row = document.createElement('tr');
+
+        //         row.innerHTML = `
+        //             <td>${packet.uuid}</td>
+        //             <td>${packet.protocol}</td>
+        //             <td>${packet.arrival_time}</td>
+        //             <td>${packet.src_ip}</td>
+        //             <td>${packet.dst_ip}</td>
+        //             <td><details><summary>Info</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.additional_data, null, 4)}</code></pre></details></td>
+        //         `;
+
+        //         tableBody.appendChild(row);
+        //     });
+        // }
+        async function fetchData() {
+            console.log('a');
+            const fromDate = document.getElementById('from-date').value || '';
+            const toDate = document.getElementById('to-date').value || '';
+            const url = 'http://localhost:8080/api/packet/output/get?limit=50&from_date=' + fromDate + '&to_date=' + toDate;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                populateTable(data);
+
+                drawTimeChart(data);
+                drawSentByIpChart(data);
+                drawReceivedByIpChart(data);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function populateTable(packets) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = ''; // Очищаем предыдущие данные
+
+            packets.forEach(packet => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${packet.uuid}</td>
+                    <td>${packet.protocol}</td>
+                    <td>${packet.arrival_time}</td>
+                    <td>${packet.src_ip}</td>
+                    <td>${packet.dst_ip}</td>
+                    <td><details><summary>Info</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.additional_data, null, 4)}</code></pre></details></td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function countSrcIPs(packets) {
+            const ipCount = {};
+            
+            packets.forEach(packet => {
+                const ip = packet.src_ip || 'unknown';
+                ipCount[ip] = (ipCount[ip] || 0) + 1;
+            });
+            
+            // Convert to array and sort by count descending
+            return Object.entries(ipCount)
+                .sort((a, b) => b[1] - a[1]);
+        }
+
+        google.charts.load('current', {'packages':['corechart']});
+    </script>
+
+    <script src="{{ url_for('static', filename='dashboard/script/drawTimeChart.js') }}"></script>
+    <script src="{{ url_for('static', filename='dashboard/script/drawSentByIpChart.js') }}"></script>
+    <script src="{{ url_for('static', filename='dashboard/script/drawReceivedByIpChart.js') }}"></script>
+
+</body>
+</html>
