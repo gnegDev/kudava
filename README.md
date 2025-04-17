@@ -4,7 +4,7 @@ Open-source NTA system with ML and DPI analyzing.
 Requirements:
 - Docker
 
-To build the app :  
+To build the app:  
 - Download the source code
 - ```cd kudava```
 - ```docker compose up```
