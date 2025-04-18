@@ -11,3 +11,7 @@ spring:
     hibernate:
       ddl-auto: update
       defer-datasource-initialization: true
+
+api:
+  analysis:
+    url: ${ANALYSIS_API:http://localhost:5050}

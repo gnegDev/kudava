@@ -20,7 +20,7 @@ public class PacketInputController {
     @PostMapping("/save")
     public ResponseEntity<?> savePacket(@RequestBody Packet packet) {
         packet = packetManager.savePacket(packet);
-        System.out.println(packet.toString());
+        System.out.println(packet);
         return new ResponseEntity<>(packet, HttpStatus.OK);
     }
 }

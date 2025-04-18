@@ -2,6 +2,7 @@ package com.gnegdev.kudava.service;
 
 import com.gnegdev.kudava.db.repository.PacketRepository;
 import com.gnegdev.kudava.entity.Packet;
+import com.gnegdev.kudava.entity.PacketAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,14 +14,23 @@ import java.util.List;
 @Service
 public class PacketManager {
     private final PacketRepository packetRepository;
+    private final AnalysisClient analysisClient;
+    private final PacketAnalysisManager packetAnalysisManager;
 
     @Autowired
-    public PacketManager(PacketRepository packetRepository) {
+    public PacketManager(PacketRepository packetRepository, AnalysisClient analysisClient, PacketAnalysisManager packetAnalysisManager) {
         this.packetRepository = packetRepository;
+        this.analysisClient = analysisClient;
+        this.packetAnalysisManager = packetAnalysisManager;
     }
 
     public Packet savePacket(Packet packet) {
         packet = packetRepository.save(packet);
+
+        PacketAnalysis packetAnalysis = analysisClient.analyzePacket(packet);
+        packetAnalysis = packetAnalysisManager.savePacketAnalysis(packetAnalysis);
+
+        packet.setAnalysisResult(packetAnalysis);
         return packet;
     }
 

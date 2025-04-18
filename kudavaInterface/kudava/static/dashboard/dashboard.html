@@ -45,6 +45,7 @@
                         <thead>
                             <tr>
                                 <th style="border-left: none;">UUID</th>
+                                <th>Analysis</th>
                                 <th>Protocol</th>
                                 <th>Arrival Time</th>
                                 <th>Source IP</th>
@@ -134,6 +135,7 @@
 
                 row.innerHTML = `
                     <td>${packet.uuid}</td>
+                    <td><details><summary>Analysis</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.analysis_result, null, 4)}</code></pre></details></td>
                     <td>${packet.protocol}</td>
                     <td>${packet.arrival_time}</td>
                     <td>${packet.src_ip}</td>

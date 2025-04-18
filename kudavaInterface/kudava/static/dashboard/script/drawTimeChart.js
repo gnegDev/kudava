@@ -9,7 +9,7 @@ function drawTimeChart(packets) {
         'title': 'Packets by time',
         'width': 500,
         'height': 300,
-        'hAxis': {title: 'Year',  titleTextStyle: {color: '#333'}},
+        'hAxis': {title: 'Date',  titleTextStyle: {color: '#333'}},
         'vAxis': {minValue: 0},
         'backgroundColor': { fill:'transparent' },
 
