@@ -12,6 +12,7 @@ public class AnalysisClient {
     @Value("${api.analysis.url}")
     private String url;
     public PacketAnalysis analyzePacket(Packet packet) {
+//        System.out.println(url);
         RestTemplate restTemplate = new RestTemplate();
 
         // Устанавливаем заголовки

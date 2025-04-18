@@ -13,15 +13,20 @@ app = Flask(__name__)
 #
 #     return jsonify({'prediction': prediction.tolist()})
 
+@app.route("/api/ping")
+def ping():
+    return "pong"
+
 @app.route("/api/analyze", methods=["POST"])
 def analyzePacket():
+    # print("AAA")
     packet = request.json
-    print(packet)
+    # print(packet)
     uuid = packet["uuid"]
     # print(uuid)
     response = {"uuid": uuid, "analysis_result": "OK", "timestamp": datetime.now().isoformat()}
-    print(response)
+    # print(response)
     return response
 
 if __name__ == '__main__':
-    app.run(port=5050, debug=True)
+    app.run("0.0.0.0", debug=True, port=5050)

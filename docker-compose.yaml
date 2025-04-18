@@ -19,13 +19,15 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
 
-      ANALYSIS_API: http://kudava-model:5000
+      ANALYSIS_API: http://kudava-model:5050
     depends_on:
       - kudava-db
+      - kudava-model
 
   kudava-model:
-    build: kudavaInterface/kudava
-
+    build: kudavaModel/kudava
+    ports:
+      - "5050:5050"
 
   kudava-interface:
     build: kudavaInterface/kudava
