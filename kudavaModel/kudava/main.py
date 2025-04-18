@@ -1,17 +1,9 @@
 from datetime import datetime
 
-from flask import Flask, request, jsonify
-# from sklearn.externals import joblib
+from flask import Flask, request
+from model.model_interface import predict_attack
 
 app = Flask(__name__)
-# model = joblib.load('model.pkl')
-#
-# @app.route('kudava/api/predict', methods=['POST'])
-# def predict():
-#     data = request.get_json(force=True)
-#     prediction = model.predict([data['features']])
-#
-#     return jsonify({'prediction': prediction.tolist()})
 
 @app.route("/api/ping")
 def ping():
@@ -22,9 +14,10 @@ def analyzePacket():
     # print("AAA")
     packet = request.json
     # print(packet)
-    uuid = packet["uuid"]
-    # print(uuid)
-    response = {"uuid": uuid, "analysis_result": "OK", "timestamp": datetime.now().isoformat()}
+
+    predictedAttackType = predict_attack(packet)[0]
+
+    response = {"uuid": packet["uuid"], "analysis_result": predictedAttackType, "timestamp": datetime.now().isoformat()}
     # print(response)
     return response
 

@@ -48,8 +48,10 @@
                                 <th>Analysis</th>
                                 <th>Protocol</th>
                                 <th>Arrival Time</th>
-                                <th>Source IP</th>
-                                <th>Destination IP</th>
+                                <th>Packets</th>
+                                <th>Bytes</th>
+                                <th>IP</th>
+                                <th>Port</th>
                                 <th style="border-right: none;">Additional Data</th>
                             </tr>
                         </thead>
@@ -65,43 +67,7 @@
     </main>
 
     <script>
-        // async function fetchData() {
-        //     try {
-        //         const response = await fetch('http://localhost:8080/api/packet/output/get');
-
-        //         if (!response.ok) {
-        //             throw new Error(`HTTP error! status: ${response.status}`);
-        //         }
-
-        //         const data = await response.json();
-        //         populateTable(data);
-        //     } catch (error) {
-        //         console.error('Error fetching data:', error);
-        //     }
-        //     google.charts.setOnLoadCallback(drawChart);
-        // }
-
-        // function populateTable(packets) {
-        //     const tableBody = document.getElementById('tableBody');
-        //     tableBody.innerHTML = ''; // Очищаем предыдущие данные
-
-        //     packets.forEach(packet => {
-        //         const row = document.createElement('tr');
-
-        //         row.innerHTML = `
-        //             <td>${packet.uuid}</td>
-        //             <td>${packet.protocol}</td>
-        //             <td>${packet.arrival_time}</td>
-        //             <td>${packet.src_ip}</td>
-        //             <td>${packet.dst_ip}</td>
-        //             <td><details><summary>Info</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.additional_data, null, 4)}</code></pre></details></td>
-        //         `;
-
-        //         tableBody.appendChild(row);
-        //     });
-        // }
         async function fetchData() {
-            console.log('a');
             const fromDate = document.getElementById('from-date').value || '';
             const toDate = document.getElementById('to-date').value || '';
             const url = 'http://localhost:8080/api/packet/output/get?limit=50&from_date=' + fromDate + '&to_date=' + toDate;
@@ -114,7 +80,8 @@
                 }
 
                 const data = await response.json();
-                
+                console.log(data);
+
                 populateTable(data);
 
                 drawTimeChart(data);
@@ -133,13 +100,24 @@
             packets.forEach(packet => {
                 const row = document.createElement('tr');
 
+                // row.innerHTML = `
+                //     <td>${packet.uuid}</td>
+                //     <td><details><summary>Analysis</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.analysis_result, null, 4)}</code></pre></details></td>
+                //     <td>${packet.protocol}</td>
+                //     <td>${packet.arrival_time}</td>
+                //     <td>${packet.src_ip}</td>
+                //     <td>${packet.dst_ip}</td>
+                //     <td><details><summary>Info</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.additional_data, null, 4)}</code></pre></details></td>
+                // `;
                 row.innerHTML = `
                     <td>${packet.uuid}</td>
                     <td><details><summary>Analysis</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.analysis_result, null, 4)}</code></pre></details></td>
-                    <td>${packet.protocol}</td>
+                    <td>${packet.protocol} ${packet.service}</td>
                     <td>${packet.arrival_time}</td>
-                    <td>${packet.src_ip}</td>
-                    <td>${packet.dst_ip}</td>
+                    <td>>> ${packet.spkts}, << ${packet.dpkts}</td>
+                    <td>>> ${packet.sbytes}, << ${packet.dbytes}</td>
+                    <td>${packet.src_ip} >> ${packet.dst_ip}</td>
+                    <td>${packet.src_port} >> ${packet.dst_port}</td>
                     <td><details><summary>Info</summary><pre><code class="language-json" background=black>${JSON.stringify(packet.additional_data, null, 4)}</code></pre></details></td>
                 `;
 
